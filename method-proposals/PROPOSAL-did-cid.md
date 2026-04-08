@@ -32,6 +32,8 @@ Rather than mandating a single consensus mechanism, `did:cid` supports multiple 
 | Bitcoin     | ~60 min | ~$0.001/batch   | Strong   | Enterprise, legal identity    |
 | Feathercoin | ~15 min | ~$0.00001/batch | Strong   | Cost-sensitive applications   |
 
+DIDs can also migrate between registries after creation (e.g., from Hyperswarm to Bitcoin) as requirements evolve, without changing the DID identifier itself.
+
 ### DID Lifecycle
 
 ```
@@ -53,7 +55,7 @@ All `did:cid` identifiers begin life anchored to a Content-Addressable Storage (
 The `did:cid` method evolved from the MDIP (MultiDimensional Identity Protocol) implementation. While sharing architectural concepts, `did:cid` represents a specification refinement focused on:
 
 1. **Clearer naming**: "Content IDentifier" explicitly describes the cryptographic foundation
-2. **W3C alignment**: Tighter conformance with DID Core specification
+2. **W3C alignment**: Tighter conformance with DID Core specification, W3C JWE standard for encryption, and W3C VC Data Model v2 for credentials
 3. **Simplified resolution**: Streamlined DID Document format
 4. **Production infrastructure**: Public nodes, universal resolver integration, production tooling
 
@@ -62,12 +64,12 @@ The `did:cid` method evolved from the MDIP (MultiDimensional Identity Protocol) 
 ### Specifications
 
 - [DID Scheme Specification](https://archetech.com/protocol.html)
-- [Gatekeeper API (OpenAPI)](https://github.com/archetech/archon/blob/main/doc/gatekeeper-api.json)
-- [Keymaster API (OpenAPI)](https://github.com/archetech/archon/blob/main/doc/keymaster-api.json)
+- [Gatekeeper API (OpenAPI)](https://github.com/archetech/archon/blob/main/docs/gatekeeper-api.json)
+- [Keymaster API (OpenAPI)](https://github.com/archetech/archon/blob/main/docs/keymaster-api.json)
 
 ### Reference Implementation
 
-- [Archon Protocol Repository](https://github.com/archetech/archon) (MIT License)
+- [Archon Protocol Repository](https://github.com/archetech/archon) (MIT License, v0.7.0)
 - NPM packages: `@didcid/gatekeeper`, `@didcid/keymaster`, `@didcid/cipher`
 
 ### Production Infrastructure
@@ -77,52 +79,56 @@ The `did:cid` method evolved from the MDIP (MultiDimensional Identity Protocol) 
 - **DID Explorer**: https://explorer.archon.technology
 - **Web Wallet**: https://wallet.archon.technology
 - **Naming Service**: https://archon.social
+- **Public Demo Node**: https://4tress.org (independent deployment, "Gondor" node)
 
 ### Client Implementations
 
 - Web Wallet (React)
 - Chrome Extension
+- Firefox Extension
+- Android App (Capacitor)
 - CLI (`@didcid/archon`)
 - TypeScript/JavaScript SDK
+- Python SDK
 
 ## Meeting the Selection Criteria
 
-| **Criteria**                                                                                                                 | **Details**                                                                                                                                                                   |
-| ---------------------------------------------------------------------------------------------------------------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| **Alignment with DID Core specification**                                                                                    | [Yes](https://archetech.com/protocol.html). Full conformance with W3C DID Core 1.0.                                                                                                    |
-| **Security and privacy features**                                                                                            | Yes. Ed25519/secp256k1 keys, encrypted DID documents, selective disclosure via challenge/response.                                                                                  |
-| **Scalability and performance**                                                                                              | Yes. CAS-based creation scales infinitely. Multi-registry architecture allows throughput/cost optimization.                                                                         |
-| **Ease of implementation and use**                                                                                           | Yes. Docker deployment in minutes. NPM packages for JS/TS. REST APIs for any language.                                                                                              |
-| **Community adoption and support**                                                                                           | Growing. Production deployment at archon.social, integration with AI agent ecosystems.                                                                                              |
-| **Compliance with relevant regulations and best practices**                                                                  | Yes. Standard cryptographic libraries, auditable operations, GDPR-compatible (user-controlled data).                                                                                |
-| **Global government-approved crypto**                                                                                        | Yes. Ed25519, secp256k1, AES-256-GCM — all widely approved algorithms.                                                                                                             |
-| **Privacy-preserving crypto**                                                                                                | Yes. Keys generated locally. Challenge/response enables selective disclosure. No correlation through resolution.                                                                    |
-| **Digitally signed cryptographic log of changes to the DID Document**                                                        | Yes. Each update is signed and ordered by registry. Full history reconstructable.                                                                                                   |
-| **Multi-factor binding to DNS**                                                                                              | Optional via `did:web` alsoKnownAs linking. Not required for base method. (see [archon.technology did:web](https://explorer.archon.technology/search?did=did:web:archon.technology)) |
-| **Specification with multiple implementers**                                                                                 | In progress. Reference implementation complete; seeking additional implementers.                                                                                                    |
-| **Scope/domain of the types of entities/subjects addressed/named by a particular method**                                    | Universal: humans, organizations, AI agents, IoT devices, credentials, assets.                                                                                                      |
-| **Estimate of the daily transaction volume of each scope/domain**                                                            | Current: ~1K DIDs resolved/day. Target: millions (AI agent identity market).                                                                                                        |
-| **DID Methods that do not serve the needs of a particular company or government**                                            | Yes. Open protocol, MIT licensed, no vendor lock-in. Multiple registries prevent single-party control.                                                                              |
-| **Governance: Clear frameworks for updates, dispute resolution, and decision-making**                                        | OSS governance via GitHub. Protocol changes through community RFC process.                                                                                                          |
-| **Usability: Simple implementation for developers**                                                                          | Yes. Full node deployment in <5 minutes. SDK available on NPM. REST API for all operations.                                                                                         |
-| **Sustainability: Energy efficiency and eco-friendly infrastructure**                                                        | Yes. Nodes run on Raspberry Pi (8GB RAM). No proof-of-work required for DID creation.                                                                                               |
-| **Economic Feasibility: DIDs costs of use must be reasonable**                                                               | Yes. DID creation is FREE. Updates optionally batched to blockchain (~$0.001/batch).                                                                                                |
-| **Legal Recognition: Cross-border frameworks for DID acceptance**                                                            | Compatible with eIDAS, W3C VC ecosystem. No jurisdiction-specific requirements.                                                                                                     |
-| **Revocation and Recovery: Decentralized mechanisms for key rotation and DID recovery**                                      | Yes. BIP-39 HD wallet recovery. Per-DID key rotation. Controller-based recovery.                                                                                                    |
-| **Emerging Markets: Offline-friendly, low-bandwidth**                                                                        | Yes. Local Gatekeeper caches enable offline resolution. Low-power device support.                                                                                                   |
-| **Long-lived DIDs needed for long-lived VCs**                                                                                | Yes. Registry-backed DIDs provide permanent audit trail. Time-travel resolution available.                                                                                          |
-| **Low and predictable marginal cost at scale (millions of accounts)**                                                        | Yes. Creation is free. Storage costs scale with CAS infrastructure (IPFS pinning ~$0.01/GB/month).                                                                                  |
-| **Ability to create and update identifiers rapidly (within seconds)**                                                        | Yes. Creation: <1 second. Hyperswarm updates: seconds. Blockchain updates: batched.                                                                                                 |
-| **Support for key rotation**                                                                                                 | Yes. Each DID supports independent key rotation with full history.                                                                                                                  |
-| **Reliable and predictable-latency operation, for updating and resolving**                                                   | Yes. Local Gatekeeper DB (SQLite/Redis/MongoDB). Resolution: <100ms typical.                                                                                                        |
-| **Resolution should not require additional state or context**                                                                | Yes. Each Gatekeeper independently maintains and validates DID state.                                                                                                               |
-| **DIDs are permanent and immutable account identifiers**                                                                     | Yes. CID-based identifiers are permanent. Document updates don't change the DID.                                                                                                    |
-| **Consider support for various DID Traits: [https://identity.foundation/did-traits/](https://identity.foundation/did-traits/)** | Supports: Decentralized, Persistent, Cryptographically Verifiable, Resolvable.                                                                                                      |
-| **Consider categories defined by DID Rubric: [https://www.w3.org/TR/did-rubric/](https://www.w3.org/TR/did-rubric/)**           | Category: Decentralized (no single point of control or failure).                                                                                                                    |
-| **Who WANTS to standardize the DID method and commits to doing the work?**                                                   | Archetech (archetech.com) — Christian Saucier, David Cypher. Committed to spec development and maintenance.                                                                        |
-| **Are there AT LEAST two WG members who support standardization of a DID method?**                                           | Seeking WG member support through this proposal.                                                                                                                                    |
-| **Are there no trademark or IP issues?**                                                                                     | Yes. MIT License. "Archon" trademark held by Archetech for protocol branding only.                                                                                                  |
-| **What type of DID method is this?**                                                                                         | Decentralized                                                                                                                                                                       |
+| **Criteria**                                                                                                                 | **Details**                                                                                                                                                                    |
+| ---------------------------------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| **Alignment with DID Core specification**                                                                                    | [Yes](https://archetech.com/protocol.html). Full conformance with W3C DID Core 1.0. Encryption uses W3C JWE standard. Credentials conform to W3C VC Data Model v2.                      |
+| **Security and privacy features**                                                                                            | Yes. Ed25519/secp256k1 keys, W3C JWE encrypted DID documents, selective disclosure via challenge/response.                                                                           |
+| **Scalability and performance**                                                                                              | Yes. CAS-based creation scales infinitely. Multi-registry architecture allows throughput/cost optimization. Benchmarked DID resolution performance.                                  |
+| **Ease of implementation and use**                                                                                           | Yes. Docker deployment in minutes. NPM packages for JS/TS. Python SDK. REST APIs for any language.                                                                                   |
+| **Community adoption and support**                                                                                           | Growing. ~8,000 DIDs registered. Production deployments at archon.social and 4tress.org. Integration with AI agent ecosystems.                                                       |
+| **Compliance with relevant regulations and best practices**                                                                  | Yes. Standard cryptographic libraries, auditable operations, GDPR-compatible (user-controlled data).                                                                                 |
+| **Global government-approved crypto**                                                                                        | Yes. Ed25519, secp256k1, AES-256-GCM — all widely approved algorithms.                                                                                                              |
+| **Privacy-preserving crypto**                                                                                                | Yes. Keys generated locally. Challenge/response enables selective disclosure. No correlation through resolution.                                                                     |
+| **Digitally signed cryptographic log of changes to the DID Document**                                                        | Yes. Each update is signed and ordered by registry. Full history reconstructable. Time-travel resolution to any version.                                                             |
+| **Multi-factor binding to DNS**                                                                                              | Optional via `did:web` alsoKnownAs linking. Not required for base method. (see [archon.technology did:web](https://explorer.archon.technology/search?did=did:web:archon.technology))  |
+| **Specification with multiple implementers**                                                                                 | In progress. Reference implementation complete in TypeScript/Node.js; Python Gatekeeper implementation planned. Multiple independent node operators (archon.technology, 4tress.org). |
+| **Scope/domain of the types of entities/subjects addressed/named by a particular method**                                    | Universal: humans, organizations, AI agents, IoT devices, credentials, assets.                                                                                                       |
+| **Estimate of the daily transaction volume of each scope/domain**                                                            | Current: ~8,000 DIDs registered, growing. Target: millions (AI agent identity market).                                                                                               |
+| **DID Methods that do not serve the needs of a particular company or government**                                            | Yes. Open protocol, MIT licensed, no vendor lock-in. Multiple registries prevent single-party control.                                                                               |
+| **Governance: Clear frameworks for updates, dispute resolution, and decision-making**                                        | OSS governance via GitHub. Protocol changes through community RFC process.                                                                                                           |
+| **Usability: Simple implementation for developers**                                                                          | Yes. Full node deployment in <5 minutes. SDK available on NPM and PyPI. REST API for all operations.                                                                                 |
+| **Sustainability: Energy efficiency and eco-friendly infrastructure**                                                        | Yes. Nodes run on Raspberry Pi (8GB RAM). No proof-of-work required for DID creation.                                                                                                |
+| **Economic Feasibility: DIDs costs of use must be reasonable**                                                               | Yes. DID creation is FREE. Updates optionally batched to blockchain (~$0.001/batch). Built-in Lightning Network integration enables DID-to-DID micropayments for services.           |
+| **Legal Recognition: Cross-border frameworks for DID acceptance**                                                            | Compatible with eIDAS, W3C VC ecosystem. No jurisdiction-specific requirements.                                                                                                      |
+| **Revocation and Recovery: Decentralized mechanisms for key rotation and DID recovery**                                      | Yes. BIP-39 HD wallet recovery. Per-DID key rotation. Controller-based recovery. Registry migration without identity loss.                                                           |
+| **Emerging Markets: Offline-friendly, low-bandwidth**                                                                        | Yes. Local Gatekeeper caches enable offline resolution. Low-power device support.                                                                                                    |
+| **Long-lived DIDs needed for long-lived VCs**                                                                                | Yes. Registry-backed DIDs provide permanent audit trail. Time-travel resolution available. Optional Bitcoin anchoring for timestamped immutability.                                  |
+| **Low and predictable marginal cost at scale (millions of accounts)**                                                        | Yes. Creation is free. Storage costs scale with CAS infrastructure (IPFS pinning ~$0.01/GB/month).                                                                                   |
+| **Ability to create and update identifiers rapidly (within seconds)**                                                        | Yes. Creation: <1 second. Hyperswarm updates: seconds. Blockchain updates: batched.                                                                                                  |
+| **Support for key rotation**                                                                                                 | Yes. Each DID supports independent key rotation with full history.                                                                                                                   |
+| **Reliable and predictable-latency operation, for updating and resolving**                                                   | Yes. Local Gatekeeper DB (SQLite/Redis/MongoDB). Resolution: <100ms typical.                                                                                                         |
+| **Resolution should not require additional state or context**                                                                | Yes. Each Gatekeeper independently maintains and validates DID state.                                                                                                                |
+| **DIDs are permanent and immutable account identifiers**                                                                     | Yes. CID-based identifiers are permanent. Document updates don't change the DID.                                                                                                     |
+| **Consider support for various DID Traits: [https://identity.foundation/did-traits/](https://identity.foundation/did-traits/)** | Supports: Decentralized, Persistent, Cryptographically Verifiable, Resolvable.                                                                                                       |
+| **Consider categories defined by DID Rubric: [https://www.w3.org/TR/did-rubric/](https://www.w3.org/TR/did-rubric/)**           | Category: Decentralized (no single point of control or failure).                                                                                                                     |
+| **Who WANTS to standardize the DID method and commits to doing the work?**                                                   | Archetech (archetech.com) — Christian Saucier, David Cypher. Committed to spec development and maintenance.                                                                         |
+| **Are there AT LEAST two WG members who support standardization of a DID method?**                                           | Seeking WG member support through this proposal.                                                                                                                                     |
+| **Are there no trademark or IP issues?**                                                                                     | Yes. MIT License. "Archon" trademark held by Archetech for protocol branding only.                                                                                                   |
+| **What type of DID method is this?**                                                                                         | Decentralized                                                                                                                                                                        |
 
 ## Is this DID method already involved in a standardization process? If so, where?
 
@@ -139,6 +145,7 @@ AI agents need verifiable identity to build trust with other agents and services
 - Instant identity creation (agents can self-provision)
 - Verifiable credentials for capability attestation
 - Challenge/response authentication without passwords
+- DID-to-DID Lightning micropayments for agent services
 
 ### 2. Decentralized Naming (archon.social)
 
@@ -155,10 +162,11 @@ Issue and verify W3C Verifiable Credentials with:
 - Credential DIDs for revocation checking
 - Schema DIDs for interoperability
 - Selective disclosure via challenge/response
+- Any URI as credentialSubject.id (W3C VC Data Model v2 compliant)
 
 ### 5. Decentralized Messaging (D-Mail)
 
-End-to-end encrypted messaging using DID-based addressing and key exchange.
+End-to-end encrypted messaging using DID-based addressing and W3C JWE key exchange.
 
 ### 6. Privacy-Preserving Voting
 
